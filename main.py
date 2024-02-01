@@ -1,54 +1,58 @@
+import string
+
+
 # List of ciphers
 class Ciphers:
-    alphabet = 'abcdefghijklmnopqrstuvwxyz'
     
 
-    # Caesar Cipher
-    def caesar(self, text: str, shift:int):
-        new_text = ''
+    # Create a dictionary that is shifted accordingly
+    def dictShiftCreator(self, shift):
+        alphabet = string.ascii_lowercase + string.ascii_uppercase
 
-        # Go through each character in text
-        for char in text:
-            # Append any non-letter character to the message
+        shifted_lower = string.ascii_lowercase[shift:] + string.ascii_lowercase[0:shift]
+        shifted_upper = string.ascii_uppercase[shift:] + string.ascii_uppercase[0:shift]
+
+        shifted_alphabet = shifted_lower + shifted_upper
+
+        return {key: value for key, value in zip(alphabet, shifted_alphabet)}
+
+
+    def caesar(self, message: str, shift: int):
+        # Create the shifted dictionary on start based on shift amount
+        shifted_dict = self.dictShiftCreator(shift)
+        new_message = ''
+
+        for char in message:
             if not char.isalpha():
-                new_text += char
-            elif char.isupper():
-                char = char.lower()
-                index = self.alphabet.find(char)
-                new_index = (index + shift) % len(self.alphabet)
-                new_text += self.alphabet[new_index].upper()
-            # If lower case letter, shift letter by inputted offset
+                # If the character isn't a letter, add it as is
+                new_message += char
             else:
-                index = self.alphabet.find(char)
-                new_index = (index + shift) % len(self.alphabet)
-                new_text += self.alphabet[new_index]
-                
-        
-        return new_text
+                # Output new letter from shifted dictionary
+                new_message += shifted_dict[char]
+
+        return new_message
     
 
     # Vigenere Cipher
-    def vigenere(self, text: str, key:str, direction: int=1):
-        key_index = 0
-        new_text = ''
+    def vigenere(self, message: str, keyword: str):
+        keyword_index = 0
+        new_message = ''
 
-        for char in text:
+        for char in message:
             if not char.isalpha():
-                new_text += char
-            elif char.isupper():
-                char = char.lower()
-                key_char = key[key_index % len(key)]
-                key_index +=1
-                offset = self.alphabet.index(key_char)
-                index = self.alphabet.find(char)
-                new_index = ((index + offset*direction) % len(self.alphabet))
-                new_text += self.alphabet[new_index].upper()
+                # If the character isn't a letter, add it as is
+                new_message += char
             else:
-                key_char = key[key_index % len(key)]
-                key_index +=1
-                offset = self.alphabet.index(key_char)
-                index = self.alphabet.find(char)
-                new_index = ((index + offset*direction) % len(self.alphabet))
-                new_text += self.alphabet[new_index]
-        
-        return new_text
+                # Determine the shift for this letter based on the keyword
+                shift = string.ascii_lowercase.index(keyword[keyword_index].lower())
+
+                # Create the shifted dictionary based on current shift
+                shifted_dict = self.dictShiftCreator(shift)
+
+                # Output new letter from shifted dictionary
+                new_message += shifted_dict[char]
+
+                # Move to the next letter in the keyword
+                keyword_index = (keyword_index + 1) % len(keyword)
+
+        return new_message

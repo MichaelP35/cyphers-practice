@@ -7,13 +7,17 @@ class Ciphers:
 
     # Create a dictionary that is shifted accordingly
     def dictShiftCreator(self, shift):
+        # Create a string alphabet of lowercase letters followed by uppercase letters
         alphabet = string.ascii_lowercase + string.ascii_uppercase
 
+        # Shift the whole alphabet based on shift amount
         shifted_lower = string.ascii_lowercase[shift:] + string.ascii_lowercase[0:shift]
         shifted_upper = string.ascii_uppercase[shift:] + string.ascii_uppercase[0:shift]
 
+        # Save the entirely now shifted alphabet
         shifted_alphabet = shifted_lower + shifted_upper
 
+        # Turn the alphabet and shifted alphabet into a dictionary
         return {key: value for key, value in zip(alphabet, shifted_alphabet)}
 
 

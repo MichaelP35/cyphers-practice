@@ -21,6 +21,7 @@ class Ciphers:
         return {key: value for key, value in zip(alphabet, shifted_alphabet)}
 
 
+    # Caesar Cipher
     def caesar(self, message: str, shift: int):
         # Create the shifted dictionary on start based on shift amount
         shifted_dict = self.dictShiftCreator(shift)
